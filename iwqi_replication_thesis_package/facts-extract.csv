@@ -1,0 +1,26 @@
+item,value,paper_reference,notes_and_citation
+Dataset source,USGS Brackish Groundwater dataset,Section 2.2; citation [37],Primary source for all samples.【7†source】
+Samples (n),62499,Section 2.2; Table 2,Records extracted with 6 hydrochemical parameters.【7†source】
+Features (inputs),"EC, Cl-, HCO3-, Na+, Ca2+, Mg2+",Section 2.2,Six parameters used; SAR derived after conversion.【7†source】
+Unit conversion,mg/L → meq/L using Eq.(18)-(22),Appendix; Section 2.3,"Explicit conversion formulas provided for Ca2+, Mg2+, Na+, Cl-, HCO3-.【7†source】"
+SAR formula,SAR = Na+ / sqrt((Ca2+ + Mg2+)/2),"Eq.(1), Section 2.3",Sodium adsorption ratio computation.【7†source】
+IWQI method,Meireles weighted arithmetic method,Section 2.3.2; Eq.(2),"IWQI uses five parameters: EC, SAR, Na+, Cl-, HCO3-.【7†source】"
+qi calculation,Eq.(3) piecewise with class amplitudes,Section 2.3.2; Table 3,qi class limits per Table 3.【7†source】
+IWQI parameter weights,"EC:0.211, Na+:0.204, HCO3-:0.202, Cl-:0.194, SAR:0.189 (sum=1)",Table 4,Weights for Eq.(2).【7†source】
+IWQI class thresholds,NR:85–100; LR:70–85; MR:55–70; HR:40–55; SR:0–40,Table 5,Five-class mapping for IWQI.【7†source】
+Missing-data imputer,Random Forest regression,Section 2.3.1,Used to impute EC; train/test split 80/20 for imputation model.【7†source】
+Imputer performance,R^2 = 0.98,Section 3.2; Fig. 8,RF-based imputer quality metric.【7†source】
+Imputer feature importance (top),Cl-:0.95; Na+:0.03; Ca2+:0.006; HCO3-:0.005; Mg2+:0.004; SAR:0.004,Section 3.2; Fig. 9,Importance order reported.【7†source】
+Imbalance methods,ADASYN oversampling; class_weight,Section 2.3.3,ADASYN distribution shown in Fig. 4; class_weight Eq.(4).【7†source】
+Class_weight formula,weight_i = N / (k * n_i),"Eq.(4), Section 2.3.3",Standard inverse frequency weighting.【7†source】
+Stacked ensemble architecture,"Base: RF, DT, LR; Meta: LR","Section 2.4; Fig.1(a,b)",Two variants: class_weight and ADASYN.【7†source】
+AMSVM,Apportioned Margin SVM (cost-sensitive),Section 2.5; Fig.6; Eq.(10)-(11),"Kernel=rbf, gamma=0.1, C=0.1 (as reported).【7†source】"
+Cross-validation,k-fold with k=10,Section 2.6,Used for evaluation of classifiers.【7†source】
+Metrics,"Accuracy, Precision, Recall, F1; plus ROC",Section 2.7; Figs.10–14; Table 6,Standard definitions (Eq.12–17).【7†source】
+Result — Model (a) Stacking + class_weight,Accuracy=98.5; Precision=98.5; Recall=98.5; F1=98.5,"Table 6; Figs.10,14",Highest overall accuracy among methods.【7†source】
+Result — Model (b) Stacking + ADASYN,Accuracy=97.5; Precision=97.4; Recall=97.5; F1=97.4,"Table 6; Figs.11,14",More balanced macro performance across classes.【7†source】
+Result — Model (c) AMSVM + class_weight,Accuracy=87.8; Precision=74.7; Recall=83.6; F1=79.0,Table 6; Fig.12,Lower performance vs ensembles.【7†source】
+ROC summary,"AUC ≥0.97 for (a,b); 0.51–0.92 for (c)",Fig.14,Per-class ROC performance patterns.【7†source】
+Example class weights used,HR:0.67; LR:3.28; MR:1.05; NR:42.06; SR:0.45,Section 3.3,Weights applied in model (a) example.【7†source】
+Compute environment,Google Colab; 2 vCPUs; 13 GB RAM,Section 2.7 (post-metrics block),"Library stack incl. NumPy, Pandas, SciPy, Matplotlib, Seaborn, scikit-learn.【7†source】"
+Conversions (Appendix),Ca: /20; Mg: /12.15; Na: /22.99; Cl: /35.45; HCO3: /61.02,Appendix; Eq.(18)–(22),mg/L to meq/L conversions.【7†source】

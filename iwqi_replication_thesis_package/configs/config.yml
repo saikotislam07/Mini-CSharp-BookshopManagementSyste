@@ -1,0 +1,60 @@
+# Replication configuration for IWQI study
+seed: 20231105
+paths:
+  raw_data_dir: data/raw
+  processed_data_dir: data/processed
+  results_dir: results
+  figures_dir: figures
+data:
+  input_features: ["EC", "Cl", "HCO3", "Na", "Ca", "Mg"]
+  derived_features:
+    - "SAR"
+  iwqi_method: "Meireles_2009"
+  iwqi_weights:
+    EC: 0.211
+    Na: 0.204
+    HCO3: 0.202
+    Cl: 0.194
+    SAR: 0.189
+  iwqi_classes:
+    NR: [85, 100]
+    LR: [70, 85]
+    MR: [55, 70]
+    HR: [40, 55]
+    SR: [0, 40]
+preprocessing:
+  unit_conversion: "mg_per_L_to_meq_per_L"
+  imputation:
+    method: "RandomForestRegressor"
+    params:
+      n_estimators: 100
+      random_state: 42
+  scaling: null
+imbalance:
+  methods:
+    - "class_weight"
+    - "ADASYN"
+  adasyn_params:
+    sampling_strategy: "auto"
+    random_state: 42
+cv:
+  scheme: "StratifiedKFold"
+  n_splits: 10
+  shuffle: true
+  random_state: 42
+models:
+  stacking_class_weight:
+    base_learners: ["RandomForestClassifier", "DecisionTreeClassifier", "LogisticRegression"]
+    meta_learner: "LogisticRegression"
+    class_weight: "balanced"
+  stacking_adasyn:
+    base_learners: ["RandomForestClassifier", "DecisionTreeClassifier", "LogisticRegression"]
+    meta_learner: "LogisticRegression"
+  amsvm:
+    type: "SVC"
+    kernel: "rbf"
+    gamma: 0.1
+    C: 0.1
+reporting:
+  metrics: ["accuracy", "precision_weighted", "recall_weighted", "f1_weighted", "precision_macro", "recall_macro", "f1_macro"]
+  decimals: 2
